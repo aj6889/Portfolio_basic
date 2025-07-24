@@ -8,6 +8,7 @@ document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
 });
 
 // Certificate Modal Logic
+// Certificate Modal Logic
 const modalContainer = document.createElement('div');
 modalContainer.className = 'modal';
 modalContainer.innerHTML = `
@@ -30,6 +31,7 @@ const modalImg = modal.querySelector("#modal-img");
 const prevBtn = modal.querySelector("#prev-btn");
 const nextBtn = modal.querySelector("#next-btn");
 const closeBtn = modal.querySelector(".close-btn");
+const modalControls = modal.querySelector('.modal-controls');
 
 // Open modal with certificate images
 function openModal(images = [], pdf) {
@@ -37,6 +39,13 @@ function openModal(images = [], pdf) {
   certImages = images;
   currentIndex = 0;
   modalImg.src = images[0];
+
+  // Show arrows only if there are multiple images
+  if (images.length > 1) {
+    modalControls.style.display = "flex";
+  } else {
+    modalControls.style.display = "none";
+  }
 
   // Remove any existing PDF button
   modal.querySelector('.view-pdf-btn')?.remove();
@@ -51,6 +60,7 @@ function openModal(images = [], pdf) {
 
   modal.style.display = "flex";
 }
+
 
 // Close modal
 function closeModal() {
@@ -79,13 +89,19 @@ document.querySelectorAll('.certificate').forEach(cert => {
 // Modal button controls
 prevBtn.addEventListener('click', () => {
   currentIndex = (currentIndex - 1 + certImages.length) % certImages.length;
-  showImage(currentIndex);
+  modalImg.src = certImages[currentIndex];
 });
 nextBtn.addEventListener('click', () => {
   currentIndex = (currentIndex + 1) % certImages.length;
-  showImage(currentIndex);
+  modalImg.src = certImages[currentIndex];
 });
-closeBtn.addEventListener('click', closeModal);
+closeBtn.addEventListener('click', () => {
+  modal.style.display = "none";
+  modal.querySelector('.view-pdf-btn')?.remove();
+});
 modal.addEventListener('click', e => {
-  if (e.target === modal) closeModal();
+  if (e.target === modal) {
+    modal.style.display = "none";
+    modal.querySelector('.view-pdf-btn')?.remove();
+  }
 });
